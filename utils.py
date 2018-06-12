@@ -2,66 +2,62 @@ import cv2, os
 import numpy as np
 import matplotlib.image as mpimg
 import random
+from random import shuffle
+import sklearn
 
 IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS = 160, 320, 3
-INPUT_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
 
+def get_image_path(source_path):
+    """Convert static global path to local path"""
 
-def load_image(data_dir, image_file):
+    split = source_path.split('\\')
+    # get filename
+    filename = split[-1].lstrip()
+    # get folder name
+    folder = split[-3]
+    # get full data path
+    current_path = folder + '/IMG/' + filename
+    return current_path
+
+def flip_image(image, measurement, flip_probability=1.0):
+    if random.random() <= flip_probability:
+        image = cv2.flip(image, 1)
+        measurement*=-1
+    return image, measurement
+
+def add_salt_pepper_noise(img):
     """
-    Load RGB images from a file
+    Randomly add Salt and pepper noise
     """
-    return mpimg.imread(os.path.join(data_dir, image_file.strip()))
+    # Need to produce a copy as to not modify the original image
+    dice = random.randint(0, 100)
 
+    if (dice < 30):
+        row, col, _ = img.shape
+        salt_vs_pepper = 0.20
+        amount = 0.030
+        num_salt = np.ceil(amount * img.size * salt_vs_pepper)
+        num_pepper = np.ceil(amount * img.size * (1.0 - salt_vs_pepper))
 
-def crop(image):
-    """
-    Crop the image (removing the sky at the top and the car front at the bottom)
-    """
-    return image[60:-25, :, :] # remove the sky and the car front
+        # Add Salt noise
+        coords = [np.random.randint(0, i - 1, int(num_salt)) for i in img.shape]
+        img[coords[0], coords[1], :] = 255
 
-
-def resize(image):
-    """
-    Resize the image to the input shape used by the network model
-    """
-    return cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
-
+        # Add Pepper noise
+        coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in img.shape]
+        img[coords[0], coords[1], :] = 0
+    return img
 
 def rgb2yuv(image):
     """
-    Convert the image from RGB to YUV (This is what the NVIDIA model does)
+    Convert the image from RGB to YUV (From Nvidia paper)
     """
     return cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
 
-
 def preprocess(image):
+    """Preprocess image on validation or before applying augmentation"""
     image = rgb2yuv(image)
     return image
-
-
-def choose_image(data_dir, center, left, right, steering_angle):
-    """
-    Randomly choose an image from the center, left or right, and adjust
-    the steering angle.
-    """
-    choice = np.random.choice(3)
-    if choice == 0:
-        return left, steering_angle + 0.2
-    elif choice == 1:
-        return right, steering_angle - 0.2
-    return center, steering_angle
-
-
-def random_flip(image, steering_angle):
-    """
-    Randomly flipt the image left <-> right, and adjust the steering angle.
-    """
-    if np.random.rand() < 0.5:
-        image = cv2.flip(image, 1)
-        steering_angle = -steering_angle
-    return image, steering_angle
-
 
 def random_translate(image, steering_angle, range_x, range_y):
     """
@@ -104,27 +100,6 @@ def random_shadow(image):
     return cv2.cvtColor(hls, cv2.COLOR_HLS2RGB)
 
 
-def add_salt_pepper_noise(img):
-    # Need to produce a copy as to not modify the original image
-    dice = random.randint(0, 100)
-
-    if (dice < 30):
-        row, col, _ = img.shape
-        salt_vs_pepper = 0.20
-        amount = 0.030
-        num_salt = np.ceil(amount * img.size * salt_vs_pepper)
-        num_pepper = np.ceil(amount * img.size * (1.0 - salt_vs_pepper))
-
-        # print(num_salt)
-        # Add Salt noise
-        coords = [np.random.randint(0, i - 1, int(num_salt)) for i in img.shape]
-        img[coords[0], coords[1], :] = 255
-
-        # Add Pepper noise
-        coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in img.shape]
-        img[coords[0], coords[1], :] = 0
-    return img
-
 def random_brightness(image):
     """
     Randomly adjust brightness of the image.
@@ -136,46 +111,59 @@ def random_brightness(image):
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
 
-def augument(data_dir, center, left, right, steering_angle, range_x=100, range_y=10):
+def generator(samples, batch_size=32, is_training=True):
     """
-    Generate an augumented image and adjust steering angle.
-    (The steering angle is associated with the center image)
+    Lazy batch train/validation generator for memory efficiency
     """
-    image, steering_angle = choose_image(data_dir, center, left, right, steering_angle)
-    image, steering_angle = random_flip(image, steering_angle)
-    image, steering_angle = random_translate(image, steering_angle, range_x, range_y)
-    image = random_shadow(image)
-    image = random_brightness(image)
-    return image, steering_angle
+    num_samples = len(samples)
 
+    #vertical, horizontal range for random translation
+    x_translate_range = 100
+    y_translate_range = 10
 
-def batch_generator(data_dir, image_paths, steering_angles, batch_size, is_training):
-    """
-    Generate training image give image paths and associated steering angles
-    """
-    data_dir = data_dir[random.randint(0,2)]
+    while 1: # Loop forever so the generator never terminates
+        #shuffle the samples once the whole data is processed into batches
+        shuffle(samples)
+        #split data into batches
+        for offset in range(0, num_samples, batch_size):
+            batch_samples = samples[offset:offset+batch_size]
+            images = []
+            angles = []
+            for batch_sample in batch_samples:
+                # corrections for centered view image, left camera view image and right camera view image
+                corrections = [0,0.2,-0.2]
+                # iterate over center, right and left camera view images
+                for i in range(3):
+                    current_path = get_image_path(batch_sample[i])
 
-    images = np.empty([batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS])
-    steers = np.empty(batch_size)
+                    # read image
+                    image = cv2.imread(current_path)
+                    # append image for training/validation
+                    images.append(preprocess(image))
 
-    while True:
-        i = 0
-        for index in np.random.permutation(image_paths.shape[0]):
-            index = max(0, index-3)
-            while index%3!=0:
-                index-=1
-            center, left, right = image_paths[index], image_paths[index+1], image_paths[index+2]
-            steering_angle = steering_angles[index]
-            # argumentation
-            if is_training and np.random.rand() < 0.6:
-                image, steering_angle = augument(data_dir, center, left, right, steering_angle)
-            else:
-                image = center
-            # add the image and steering angle to the batch
-            images[i] = preprocess(image)
-            steers[i] = steering_angle
-            i += 1
-            if i == batch_size:
-                break
-        yield images, steers
+                    # calculate angle measurement with applied angle corrections
+                    measurement = float(batch_sample[3]) + corrections[i]
+                    angles.append(measurement)
 
+                    # insert flipped image for opposite direction generalization
+                    images.append(preprocess(cv2.flip(image, 1)))
+                    angles.append(measurement*-1.0)
+
+                    # create random augmented image only for training
+                    if is_training:
+                        image, measurement = flip_image(image, measurement, flip_probability=0.5)
+                        image = add_salt_pepper_noise(image)
+                        image, measurement = random_translate(image, measurement, x_translate_range, y_translate_range)
+                        image = random_shadow(image)
+                        image = random_brightness(image)
+                        images.append(preprocess(image))
+                        angles.append(measurement)
+
+            # create X, y dataset
+            X_train = np.array(images)
+            y_train = np.array(angles)
+
+            #
+            # n, bins, patches = plt.hist(np.array(y_train), bins=20)
+            # plt.show()
+            yield sklearn.utils.shuffle(X_train, y_train)
