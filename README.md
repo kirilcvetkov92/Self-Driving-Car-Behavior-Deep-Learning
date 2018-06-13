@@ -1,5 +1,8 @@
 # **Behavioral Cloning** 
 ---
+Implementing end to end learning for self driving cars using simulator based on Nvidia Paper : (https://arxiv.org/pdf/1604.07316v1.pdf) 
+
+[![Introduction video](https://img.youtube.com/vi/kb53G_J8Qds/0.jpg)](https://www.youtube.com/watch?v=kb53G_J8Qds)
 
 **Behavioral Cloning Project**
 
@@ -38,11 +41,12 @@ The goals / steps of this project are the following:
 #### Files
 
 My project includes the following files:
-* model.py containing the script to create and train the model
-* drive.py for driving the car in autonomous mode
-* model.h5 containing a trained convolution neural network 
-* utils.py containing helper functions for augmentation and generator function for lazy augmentation on batch generation
-* README.md for summarizing the results
+* ```model.py``` containing the script to create and train the model
+* ```drive.py``` for driving the car in autonomous mode
+* ```model.h5``` containing a trained convolution neural network 
+* ```utils.py``` containing helper functions for augmentation and generator function for lazy augmentation on batch generation
+* ```README.md``` for summarizing the results
+* ```videos/*``` - A videos recording of vehicle driving autonomously for ne lap around the track.
 
 #### Requirements
 
@@ -59,11 +63,6 @@ My project includes the following files:
 ##### pip : 
 * Tensorflow GPU : https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-0.12.1-cp35-cp35m-linux_x86_64.whl
 * keras==2.0.6
-
-Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
-```sh
-python drive.py model.h5
-```
 
 ### Running the code
 
