@@ -42,7 +42,7 @@ My project includes the following files:
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
 * utils.py containing helper functions for augmentation and generator function for lazy augmentation on batch generation
-* writeup_report.md for summarizing the results
+* README.md for summarizing the results
 
 #### Requirements
 
