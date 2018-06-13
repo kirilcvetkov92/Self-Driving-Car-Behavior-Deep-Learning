@@ -110,7 +110,7 @@ Fully connected feedforward neural networks can be used to learn features as wel
 
 The training process is pretty simple, 
 
-The proposed angle is compared to the desired command for that image, and the weights of the ```Convolutional neural network``` are adjusted to bring the ```CNN output``` closer to the desired output. The weight adjustment is accomplished using back propagation as implemented in the Keras machine learning package.
+The proposed angle is compared to the desired angle for that image, and the weights of the ```Convolutional neural network``` are adjusted to bring the ```CNN output``` closer to the desired output. The weight adjustment is accomplished using back propagation as implemented in the Keras machine learning package.
 Below you can se the image, describing the training of neural network.
 ![drawing_training]
 
@@ -127,12 +127,20 @@ The training set was created based on the following scenario :
 * Driving around lane1 to capture images with (30mph) till the model is enough good to drive at (15mph), It took me about 5 laps with using he mouse controll. 
 * Driving around lane2 to capture images with (15mph) till the model is enough good to drive at (10mph), It took me about 2 laps with using he mouse controll. 
 
-#### 3.Training and Validation methodology
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set.
-Below you can see the data distribution of the training and validaiton set.
 
+#### 3. Generator and Data augmentation
+On each random agumentation batch we generate augmented images so the model can generalize better.
+Storing augmented images for the whole data can be really expensive and can exceed our RAM limit, but with using of generator, we can store the augmented images on ram but only augmented images generated for the current batch.
+On the picture bellow, you can see the whole augmentation flow : 
+![drawing_augmentation]
+
+
+#### 4.Training and Validation methodology
 Below, you can see the training set distribution : 
 ![dist]
+
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set.
+Below you can see the data distribution of the training and validaiton set.
 
 | Set         		| Random Augmentation Batch 1		|  Random Augmentation Batch 2	     |  Random Augmentation Batch 3	      | Random Augmentation Batch 4	|
 |:---------------------:|:----------:|:---------:|:-----------:|:-----------:| 
@@ -140,14 +148,11 @@ Below, you can see the training set distribution :
 | Validation  	      	| ![val_dist1]  |![val_dist2]  | ![val_dist3]      |![val_dist4] |
 
 
-
-
 #### 4. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 76).
 
-
-#### Overfitting and enhaching training process
+#### 5. Overfitting and enhaching training process
 
 I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
 
@@ -160,73 +165,25 @@ The model was trained and validated on different data sets to ensure that the mo
 * Batch normalization accelerates training by requiring less iterations to converge to a given loss value. This can be done by using higher learning rates, but with smaller learning rates you can still see an improvement. The paper shows this pretty clearly.
 * Using ELU also has this effect when compared to a sigmoid activation
 ##### Data Augmentation
-* It's always good to have 
+* The augmented images helped the model to generalize better so the car drives smooth on both lanes, and it also drives great on third lane where I didn't provide any trianing data, but the model is robust to drive in an unknown lane.
 
-Below, you can see the visualization of the training/validation cost during the training : 
-![loss]
-
-
-#### 2. Final Model Architecture
+### Final Model Architecture
 
 My model consists of an enhanced version of Nvidia's  End to End Learning for Self-Driving Cars architecture.
 
 ![drawing_model]
 
+The ideal number of epochs was 18 as evidenced by loss graph, I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+Below, you can see the visualization of the training/validation cost during the training : 
+![loss]
 
+
+The final step was to run the simulator to see how well the car was driving around track one. 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-### Model Architecture and Training Strategy
+You can watch the youtube videos bellow : 
 
-#### 1. Solution Design Approach
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
-
-#### 2. Final Model Architecture
-
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
-
-#### 3. Creation of the Training Set & Training Process
-
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+| Lane 1	|  Lane 2    |  Lane3    |
+|:-----------:|:----------:|:---------:|
+| [![Introduction video](https://img.youtube.com/vi/FqO5FANcdSE/0.jpg)](https://www.youtube.com/watch?v=FqO5FANcdSE)   	| [![Introduction video](https://img.youtube.com/vi/mj32wCefQnE/0.jpg)](https://www.youtube.com/watch?v=mj32wCefQnE)| [![Introduction video](https://img.youtube.com/vi/piNMVkYRZwA/0.jpg)](https://www.youtube.com/watch?v=piNMVkYRZwA) | 
