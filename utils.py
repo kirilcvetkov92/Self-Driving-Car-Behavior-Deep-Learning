@@ -59,42 +59,36 @@ def preprocess(image):
     image = rgb2yuv(image)
     return image
 
-def random_translate(image, steering_angle, range_x, range_y):
+def random_translate(image, angle, range_x, range_y):
     """
     Randomly shift the image virtially and horizontally (translation).
     """
-    trans_x = range_x * (np.random.rand() - 0.5)
-    trans_y = range_y * (np.random.rand() - 0.5)
-    steering_angle += trans_x * 0.002
-    trans_m = np.float32([[1, 0, trans_x], [0, 1, trans_y]])
+    random_x_translate = np.random.rand()
+    random_y_translate = np.random.rand()
+    translate_x = range_x * (random_x_translate - 0.5)
+    translate_y = range_y * (random_y_translate - 0.5)
+    angle += translate_x * 0.002
+    trans = np.float32([[1, 0, translate_x], [0, 1, translate_y]])
     height, width = image.shape[:2]
-    image = cv2.warpAffine(image, trans_m, (width, height))
-    return image, steering_angle
+    image = cv2.warpAffine(image, trans, (width, height))
+    return image, angle
 
 
 def random_shadow(image):
     """
     Generates and adds random shadow
     """
-    # (x1, y1) and (x2, y2) forms a line
-    # xm, ym gives all the locations of the image
-    x1, y1 = IMAGE_WIDTH * np.random.rand(), 0
-    x2, y2 = IMAGE_WIDTH * np.random.rand(), IMAGE_HEIGHT
-    xm, ym = np.mgrid[0:IMAGE_HEIGHT, 0:IMAGE_WIDTH]
-
-    # mathematically speaking, we want to set 1 below the line and zero otherwise
-    # Our coordinate is up side down.  So, the above the line: 
-    # (ym-y1)/(xm-x1) > (y2-y1)/(x2-x1)
-    # as x2 == x1 causes zero-division problem, we'll write it in the below form:
-    # (ym-y1)*(x2-x1) - (y2-y1)*(xm-x1) > 0
+    rand_width_scal_1 =  np.random.rand()
+    x1, y1 = IMAGE_WIDTH *  rand_width_scal_1, 0
+    rand_width_scal_2 =  np.random.rand()
+    x2, y2 = IMAGE_WIDTH * rand_width_scal_2, IMAGE_HEIGHT
+    xn, yn = np.mgrid[0:IMAGE_HEIGHT, 0:IMAGE_WIDTH]
     mask = np.zeros_like(image[:, :, 1])
-    mask[(ym - y1) * (x2 - x1) - (y2 - y1) * (xm - x1) > 0] = 1
+    mask[(yn - y1) * (x2 - x1) - (y2 - y1) * (xn - x1) > 0] = 1
 
-    # choose which side should have shadow and adjust saturation
     cond = mask == np.random.randint(2)
     s_ratio = np.random.uniform(low=0.2, high=0.5)
 
-    # adjust Saturation in HLS(Hue, Light, Saturation)
     hls = cv2.cvtColor(image, cv2.COLOR_RGB2HLS)
     hls[:, :, 1][cond] = hls[:, :, 1][cond] * s_ratio
     return cv2.cvtColor(hls, cv2.COLOR_HLS2RGB)
@@ -103,12 +97,14 @@ def random_shadow(image):
 def random_brightness(image):
     """
     Randomly adjust brightness of the image.
+    HSV (Hue, Saturation, Value) is also called HSB ('B' for Brightness).
     """
-    # HSV (Hue, Saturation, Value) is also called HSB ('B' for Brightness).
-    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
-    ratio = 1.0 + 0.4 * (np.random.rand() - 0.5)
-    hsv[:,:,2] =  hsv[:,:,2] * ratio
-    return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+
+    hsv_channel = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    brightness_scalar = np.random.rand()
+    ratio = 1.0 + 0.4 * (brightness_scalar - 0.5)
+    hsv_channel[:,:,2] =  hsv_channel[:,:,2] * ratio
+    return cv2.cvtColor(hsv_channel, cv2.COLOR_HSV2RGB)
 
 
 def generator(samples, batch_size=32, is_training=True):
