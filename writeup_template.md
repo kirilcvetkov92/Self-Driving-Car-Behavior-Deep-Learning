@@ -80,7 +80,6 @@ python drive.py model.h5
 #### Code Readability
 The code in model.py uses a Python generator located in utils.py, to generate data for training rather than storing the training data in RAM. The model.py code is clearly organized and comments are included where needed.
 
-#### 3. Submission code is usable and readable
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
