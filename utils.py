@@ -159,7 +159,4 @@ def generator(samples, batch_size=32, is_training=True):
             X_train = np.array(images)
             y_train = np.array(angles)
 
-            #
-            # n, bins, patches = plt.hist(np.array(y_train), bins=20)
-            # plt.show()
             yield sklearn.utils.shuffle(X_train, y_train)
