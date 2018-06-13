@@ -1,9 +1,4 @@
 # **Behavioral Cloning** 
-
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
 **Behavioral Cloning Project**
@@ -18,35 +13,73 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[dist]: documentation/distribution.png "Model Visualization"
+[train_dist1]: documentation/train_dist/plot1.png "Plot1"
+[train_dist2]: documentation/train_dist/plot2.png "Plot2"
+[train_dist3]: documentation/train_dist/plot3.png "Plot3"
+[train_dist4]: documentation/train_dist/plot4.png "Plot4"
+[val_dist1]: documentation/validation_dist/plot1.png "Plot1"
+[val_dist2]: documentation/validation_dist/plot2.png "Plot2"
+[val_dist3]: documentation/validation_dist/plot3.png "Plot3"
+[val_dist4]: documentation/validation_dist/plot4.png "Plot4"
+[drawing_arch]: documentation/drawings/Drawing1.png "Architecture"
+[drawing_training]: documentation/drawings/Drawing2.png "Training"
+[drawing_test]: documentation/validation_dist/Drawing3.png "Test drive"
+[drawing_augmentation]: documentation/drawings/Drawing4.png "Augmentation"
+[drawing_model]: documentation/drawings/Drawing5.png "MOdel"
 
-## Rubric Points
-### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-### Files Submitted & Code Quality
+## Project explanation
 
-#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
+---
+### Files & Requirements
+
+#### Files
 
 My project includes the following files:
 * model.py containing the script to create and train the model
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
-* writeup_report.md or writeup_report.pdf summarizing the results
+* utils.py containing helper functions for augmentation and generator function for lazy augmentation on batch generation
+* writeup_report.md for summarizing the results
 
-#### 2. Submission includes functional code
+#### Requirements
+
+##### Dependencies 
+
+* python==3.5.2
+* numpy
+* matplotlib
+* opencv3
+* eventlet
+* flask-socketio
+
+
+##### pip : 
+* Tensorflow GPU : https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-0.12.1-cp35-cp35m-linux_x86_64.whl
+* keras==2.0.6
+
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
 ```
 
-#### 3. Submission code is usable and readable
+### Running the code
+
+#### Functionality 
+For running this project you will need to install udacity simulation which can be found on [self-driving-car-sim]( https://github.com/udacity/self-driving-car-sim) git repository.
+
+
+#### Running
+Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
+```sh
+python drive.py model.h5
+```
+
+#### Code Readability
+The code in model.py uses a Python generator located in utils.py, to generate data for training rather than storing the training data in RAM. The model.py code is clearly organized and comments are included where needed.
+
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
