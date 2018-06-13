@@ -2,6 +2,8 @@
 ---
 Implementing end to end learning for self-driving cars using simulator based on Nvidia Paper : (https://arxiv.org/pdf/1604.07316v1.pdf) 
 
+Youtube Video : 
+
 [![Introduction video](https://img.youtube.com/vi/kb53G_J8Qds/0.jpg)](https://www.youtube.com/watch?v=kb53G_J8Qds)
 
 **Behavioral Cloning Project**
@@ -30,6 +32,7 @@ The goals/steps of this project are the following:
 [drawing_test]: documentation/validation_dist/Drawing3.jpg "Test drive"
 [drawing_augmentation]: documentation/drawings/Drawing4.jpg "Augmentation"
 [drawing_model]: documentation/drawings/Drawing5.jpg "Model"
+[loss]: documentation/train_val_loss.png "Loss"
 
 
 ---
@@ -83,22 +86,38 @@ The code in ```model.py``` uses a Python generator located in utils.py, to gener
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
 ### Model Architecture and Training Strategy
+#### 1. Solution Design Approach
 
-#### 1. Nvidia's End to End Learning for Self-Driving Cars architecture
+#### 2. Final Model Architecture
 
 My model consists of an enhanced version of Nvidia's  End to End Learning for Self-Driving Cars architecture.
 
 ![drawing_model]
 
-#### 2. Attempts to reduce overfitting in the model
+##### Target Class : Steering Angle value
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
+##### Cost Function : Mean squared error 
+
+#### 3. Attempts to reduce overfitting in the model
+
+As you can see on the picture above, the model contains dropout layers in order to reduce overfitting.
+
+##### Dropout
+The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 67,71). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+##### Batch Normalization
+* Used To increase the stability of a neural network, batch normalization normalizes the output of a previous activation layer by subtracting the batch mean and dividing by the batch standard deviation.
+* It reduces overfitting because it has a slight regularization effects. Similar to dropout, it adds some noise to each hidden layer’s activations. Therefore, if we use batch normalization, we will use less dropout, which is a good thing because we are not going to lose a lot of information. However, we should not depend only on batch normalization for regularization; we should better use it together with dropout.
+* Batch normalization accelerates training by requiring less iterations to converge to a given loss value. This can be done by using higher learning rates, but with smaller learning rates you can still see an improvement. The paper shows this pretty clearly.
+* Using ELU also has this effect when compared to a sigmoid activation
+
+
+Below, you can see the visualization of the training/validation cost during the training : 
+![loss]
 #### 3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 76).
 
 #### 4. Appropriate training data
 
