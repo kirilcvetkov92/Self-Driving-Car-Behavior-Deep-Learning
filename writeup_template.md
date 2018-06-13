@@ -42,7 +42,7 @@ My project includes the following files:
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
 * utils.py containing helper functions for augmentation and generator function for lazy augmentation on batch generation
-* writeup_report.md or writeup_report.pdf summarizing the results
+* writeup_report.md for summarizing the results
 
 #### Requirements
 
@@ -65,18 +65,20 @@ Using the Udacity provided simulator and my drive.py file, the car can be driven
 python drive.py model.h5
 ```
 
-### Code quality
+### Running the code
 
 #### Functionality 
-For running the code you will need the udacity simulatow which can be found here : 
+For running this project you will need to install udacity simulation which can be found on [self-driving-car-sim]( https://github.com/udacity/self-driving-car-sim) git repository.
 
 
-
-#### 2. Submission includes functional code
+#### Running
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
 ```
+
+#### Code Readability
+The code in model.py uses a Python generator located in utils.py, to generate data for training rather than storing the training data in RAM. The model.py code is clearly organized and comments are included where needed.
 
 #### 3. Submission code is usable and readable
 
