@@ -1,12 +1,12 @@
 # **Behavioral Cloning** 
 ---
-Implementing end to end learning for self driving cars using simulator based on Nvidia Paper : (https://arxiv.org/pdf/1604.07316v1.pdf) 
+Implementing end to end learning for self-driving cars using simulator based on Nvidia Paper : (https://arxiv.org/pdf/1604.07316v1.pdf) 
 
 [![Introduction video](https://img.youtube.com/vi/kb53G_J8Qds/0.jpg)](https://www.youtube.com/watch?v=kb53G_J8Qds)
 
 **Behavioral Cloning Project**
 
-The goals / steps of this project are the following:
+The goals/steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
 * Build, a convolution neural network in Keras that predicts steering angles from images
 * Train and validate the model with a training and validation set
@@ -25,11 +25,11 @@ The goals / steps of this project are the following:
 [val_dist2]: documentation/validation_dist/plot2.png "Plot2"
 [val_dist3]: documentation/validation_dist/plot3.png "Plot3"
 [val_dist4]: documentation/validation_dist/plot4.png "Plot4"
-[drawing_arch]: documentation/drawings/Drawing1.png "Architecture"
-[drawing_training]: documentation/drawings/Drawing2.png "Training"
-[drawing_test]: documentation/validation_dist/Drawing3.png "Test drive"
-[drawing_augmentation]: documentation/drawings/Drawing4.png "Augmentation"
-[drawing_model]: documentation/drawings/Drawing5.png "MOdel"
+[drawing_arch]: documentation/drawings/Drawing1.jpg "Architecture"
+[drawing_training]: documentation/drawings/Drawing2.jpg "Training"
+[drawing_test]: documentation/validation_dist/Drawing3.jpg "Test drive"
+[drawing_augmentation]: documentation/drawings/Drawing4.jpg "Augmentation"
+[drawing_model]: documentation/drawings/Drawing5.jpg "Model"
 
 
 ---
@@ -46,7 +46,7 @@ My project includes the following files:
 * ```model.h5``` containing a trained convolution neural network 
 * ```utils.py``` containing helper functions for augmentation and generator function for lazy augmentation on batch generation
 * ```README.md``` for summarizing the results
-* ```videos/*``` - A videos recording of vehicle driving autonomously for ne lap around the track.
+* ```videos/*``` - A videos recording of a vehicle driving autonomously for one lap around the track.
 
 #### Requirements
 
@@ -67,7 +67,7 @@ My project includes the following files:
 ### Running the code
 
 #### Functionality 
-For running this project you will need to install udacity simulation which can be found on [self-driving-car-sim]( https://github.com/udacity/self-driving-car-sim) git repository.
+For running this project you will need to install Udacity simulation which can be found on [self-driving-car-sim]( https://github.com/udacity/self-driving-car-sim) git repository.
 
 
 #### Running
@@ -77,18 +77,18 @@ python drive.py model.h5
 ```
 
 #### Code Readability
-The code in model.py uses a Python generator located in utils.py, to generate data for training rather than storing the training data in RAM. The model.py code is clearly organized and comments are included where needed.
+The code in ```model.py``` uses a Python generator located in utils.py, to generate data for training rather than storing the training data in RAM. The model.py code is clearly organized and comments are included where needed.
 
 
 The model.py file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
 ### Model Architecture and Training Strategy
 
-#### 1. An appropriate model architecture has been employed
+#### 1. Nvidia's End to End Learning for Self-Driving Cars architecture
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+My model consists of an enhanced version of Nvidia's  End to End Learning for Self-Driving Cars architecture.
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
+![drawing_model]
 
 #### 2. Attempts to reduce overfitting in the model
 
