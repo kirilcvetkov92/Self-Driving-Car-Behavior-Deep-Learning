@@ -7,6 +7,9 @@ Youtube Video :
 [![Introduction video](https://img.youtube.com/vi/kb53G_J8Qds/0.jpg)](https://www.youtube.com/watch?v=kb53G_J8Qds)
 
 **Behavioral Cloning Project**
+---
+## Project explanation
+---
 
 The goals/steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -35,10 +38,6 @@ The goals/steps of this project are the following:
 [loss]: documentation/train_val_loss.png "Loss"
 
 
----
-## Project explanation
-
----
 ### Files & Requirements
 
 #### Files
@@ -50,6 +49,11 @@ My project includes the following files:
 * ```utils.py``` containing helper functions for augmentation and generator function for lazy augmentation on batch generation
 * ```README.md``` for summarizing the results
 * ```videos/*``` - A videos recording of a vehicle driving autonomously for one lap around the track.
+
+#### Data
+You can download the full data [here](https://www.dropbox.com/sh/pgu42ikc14eequ7/AADzO4cMsOWn00rSM_j3mfCxa?dl=0) (563 MB)
+
+The data should be placed to ```_PROJECT_DIR_/data/```
 
 #### Requirements
 
