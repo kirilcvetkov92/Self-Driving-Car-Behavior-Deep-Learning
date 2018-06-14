@@ -1,18 +1,15 @@
 import csv
-import cv2
 import numpy as np
 from keras.callbacks import ModelCheckpoint
-from keras.models import load_model
 from keras.models import Sequential
-from keras.layers import Flatten, Dense, Lambda
+from keras.layers import Flatten, Dense
 from keras.layers.convolutional import Cropping2D
 from keras.layers.convolutional import Conv2D
 from keras.layers import Dropout
 from keras.layers import BatchNormalization
-from keras.models import Model
 
-from utils import preprocess, generator, add_salt_pepper_noise,\
-    IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS
+
+from utils import generator, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
