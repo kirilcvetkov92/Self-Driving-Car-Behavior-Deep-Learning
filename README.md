@@ -114,7 +114,7 @@ Fully connected feedforward neural networks can be used to learn features as wel
 
 The training process is pretty simple, 
 
-The proposed angle is compared to the desired angle for that image, and the weights of the ```Convolutional neural network``` are adjusted to bring the ```CNN output``` closer to the desired output. The weight adjustment is accomplished using back propagation as implemented in the Karas machine learning package.
+The proposed angle is compared to the desired angle for that image, and the weights of the ```Convolutional neural network``` are adjusted to bring the ```CNN output``` closer to the desired output. The weight adjustment is accomplished using back propagation as implemented in the Keras machine learning package.
 Below you can see the image, describing the training of neural network.
 ![drawing_training]
 
