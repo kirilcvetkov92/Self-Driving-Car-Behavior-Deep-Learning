@@ -51,6 +51,11 @@ My project includes the following files:
 * ```README.md``` for summarizing the results
 * ```videos/*``` - A videos recording of a vehicle driving autonomously for one lap around the track.
 
+#### Data
+You can download the full data [here](https://www.dropbox.com/sh/pgu42ikc14eequ7/AADzO4cMsOWn00rSM_j3mfCxa?dl=0) (563 MB)
+
+The data should be placed to ```_PROJECT_DIR_/data/```
+
 #### Requirements
 
 ##### Dependencies 
