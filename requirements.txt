@@ -3,6 +3,6 @@ Keras==2.0.6
 opencv-python==4.1.2.30
 Pillow==6.2.1
 sklearn
-socketio==0.2.1
+python-socketio==0.2.1
 tensorflow==1.15.0
 eventlet
