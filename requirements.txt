@@ -3,5 +3,5 @@ opencv-python==4.1.2.30
 Pillow==6.2.1
 sklearn
 python-socketio==4.2.1
-tensorflow==1.15.0
+tensorflow==2.4.2
 eventlet
